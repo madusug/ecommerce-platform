@@ -1,6 +1,6 @@
 # Project: E-Commerce Application CI/CD Pipeline
 
-This project builds a full-stack ecommerce platform with a Node.js/Express backend (`api/`) and a React frontend (`webapp/`), containerized with Docker, and deployed to AWS ECS via GitHub Actions. Below is a detailed chronicle of its creation, including every step, error encountered, and resolution applied.
+This project focuses on building a static website solution for TechOps Solutions using github and demonstrating best practices. 
 
 My goal with this project is to automate the integration and deployment process for both components using GitHub Actions, ensuring continuous integration and delivery.
 

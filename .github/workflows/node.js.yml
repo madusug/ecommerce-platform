@@ -45,6 +45,8 @@ jobs:
   
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
+        with:
+          region: us-east-1
   
       - name: Build and Push to Docker Hub and ECR
         working-directory: .  # Root for Docker build

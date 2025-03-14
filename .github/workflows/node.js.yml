@@ -51,6 +51,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Create ECR Repository if Not Exists
+        working-directory: .
+        run: |
+          aws ecr describe-repositories --repository-names ecommerce-platform --region us-east-1 || aws ecr create-repository --repository-name ecommerce-platform --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+
       - name: Build and Push to Docker Hub and ECR
         working-directory: .
         run: |
@@ -58,7 +67,9 @@ jobs:
           docker tag ecomm-local:latest ${{ secrets.DOCKER_USERNAME }}/ecommerce-platform:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/ecommerce-platform:latest || { echo "Docker Hub push failed"; exit 1; }
           docker tag ecomm-local:latest 239783743771.dkr.ecr.us-east-1.amazonaws.com/ecommerce-platform:latest
-          docker push 239783743771.dkr.ecr.us-east-1.amazonaws.com/ecommerce-platform:latest || { echo "ECR push failed"; exit 1; }
+          echo "Attempting ECR push..."
+          docker push 239783743771.dkr.ecr.us-east-1.amazonaws.com/ecommerce-platform:latest 2>&1 || { echo "ECR push failed with error above"; exit 1; }
+          echo "ECR push succeeded"
 
       - name: Update ECS Task Definition
         working-directory: .

@@ -1,10 +1,12 @@
-# Project: Ecommerce Platform with Node.js Backend and React Frontend
+# Project: E-Commerce Application CI/CD Pipeline
 
 This project builds a full-stack ecommerce platform with a Node.js/Express backend (`api/`) and a React frontend (`webapp/`), containerized with Docker, and deployed to AWS ECS via GitHub Actions. Below is a detailed chronicle of its creation, including every step, error encountered, and resolution applied.
 
----
+My goal with this project is ato automate the integration and deployment process for both components using GitHub Actions, ensuring continuous integration and delivery.
 
 ## Project Structure
+
+I started out by defining my project structure. Below is my directory structure:
 
 ecommerce-platform/
 ├── api/                    # Node.js/Express backend
@@ -27,8 +29,6 @@ ecommerce-platform/
 ├── Dockerfile              # Multi-stage Docker build
 └── README.md
 
-
----
 
 ## Step 1: Creating the Node.js Backend (`api/`)
 

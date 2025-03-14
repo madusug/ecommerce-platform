@@ -2,7 +2,7 @@
 
 This project builds a full-stack ecommerce platform with a Node.js/Express backend (`api/`) and a React frontend (`webapp/`), containerized with Docker, and deployed to AWS ECS via GitHub Actions. Below is a detailed chronicle of its creation, including every step, error encountered, and resolution applied.
 
-My goal with this project is ato automate the integration and deployment process for both components using GitHub Actions, ensuring continuous integration and delivery.
+My goal with this project is to automate the integration and deployment process for both components using GitHub Actions, ensuring continuous integration and delivery.
 
 ## Project Structure
 
@@ -34,7 +34,10 @@ ecommerce-platform/
 
 ### Initial Setup
 
+The first step in creating a website for this project was to setup the backend. This time I will be setting up the backend, which is a Node.js/Express application for e-commerce operations.
+
 1. **Directory Creation**:
+
    ```
    mkdir -p ecommerce-platform/api
    cd ecommerce-platform/api
@@ -43,7 +46,8 @@ ecommerce-platform/
 
 - Generated package.json.
 
-2. Install Dependencies:
+1.1. Install Dependencies:
+
     ```
     npm install express cors
     npm install --save-dev mocha chai chai-http
@@ -53,8 +57,8 @@ ecommerce-platform/
 - cors: Enable CORS for React frontend.
 - mocha, chai, chai-http: Testing tools.
 
-3. Backend Code (server.js):
-   
+1.2. Backend Code (server.js):
+
     ```
     const express = require('express');
     const path = require('path');
@@ -105,7 +109,7 @@ ecommerce-platform/
     module.exports = app;
     ```
 
-4. Static File (public/index.html):
+2. Static File (public/index.html):
 
     ```
     <!DOCTYPE html>
@@ -115,7 +119,7 @@ ecommerce-platform/
     </html>
     ```
 
-5. Unit Tests (tests/server.test.js):
+3. Unit Tests (tests/server.test.js):
 
     ```
     const chai = require('chai');
@@ -193,7 +197,7 @@ ecommerce-platform/
     });
     ```
 
-6. Run Locally:
+4. Run Locally:
 
     ```
     npm start  # http://localhost:3000
@@ -201,6 +205,8 @@ ecommerce-platform/
     ```
 
 ### Step 2: Creating the React Frontend (webapp/)
+
+Next, I created the frontend. Incorporating basic features like product listing, user login and order placement. These match the features that were specified by the client.
 
 Initial Setup
 
@@ -352,13 +358,19 @@ Initial Setup
 
 5. Run Locally:
 
+I ran tests locally to ensure that everything was working properly and that the frontend was properly connected to the backend.
+
     ```
     npm start # http://localhost:3001
     ```
 
 - Start api/ first (cd ../api && npm start), then webapp/ to see the UI connect to the backend.
 
+![githubaction_success](./img/1%20ci%20cd%20success.jpg)
+
 ### Step 3: Initial Errors and Fixes
+
+When testing on the backend and frontend, I encountered some errors that needed fixing. I spent some time on research to figure out the different issues and it seemed to always escalate. I was able to resolve them by implementing the steps below:
 
 **Backend Errors**
 
@@ -396,7 +408,10 @@ Initial Setup
 
 ### Step 4: Dockerizing the App
 
+I decided to utilize docker in building, testing and deploying my solution. Thus allowing for proper containerization. The first step in this process is to create the Dockerfile. However, unlike previous projects, this dockerfile will involve a multi-stage build including the frontend and the backend. 
+
 Dockerfile Creation
+
 - Multi-stage Build:
 
     ```
@@ -437,6 +452,8 @@ Dockerfile Creation
    - Fix: Set "typescript": "^4.9.5" in webapp/package.json.
 
 ## Step 5: GitHub Actions CI/CD
+
+Next, I created a workflow to tie it all together using GitHub Actions. This workflow runs on push to main, runs tests, builds the application, creates an image from it, pushes the image to docker hub repository and Elastic Container Registry as well as ECS.
 
 Workflow File (.github/workflows/node.js.yml)
 
@@ -551,7 +568,11 @@ Workflow File (.github/workflows/node.js.yml)
 6. Task Definition:
    - Errors: File not found, invalid JSON (comments), read-only fields, empty tags.
    - Fixes: Moved to .aws/, removed comments, stripped invalid fields, removed empty tags.
-  
+
+![ECR_setup](./img/2%20ECR.jpg)
+![ECS](./img/3%20ECS.jpg)
+
 ## Final Verification
+
    - Local: docker run -p 3000:3000 ecomm-local shows the app at localhost:3000.
    - CI/CD: Workflow pushes to Docker Hub (distinctugo/ecommerce-platform:latest) and ECR (239783743771.dkr.ecr.us-east-1.amazonaws.com/ecommerce-platform:latest), deploys to ECS (ecommerce-platform cluster, ecomm-service).
